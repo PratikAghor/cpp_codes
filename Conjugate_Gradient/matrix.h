@@ -1,0 +1,193 @@
+#ifndef MATRIX_H //Include guard
+#define MATRIX_H
+#include "vector.h"
+template<typename T, int row, int column>
+struct matrix
+{
+	
+	T data[row][column];
+	matrix();
+	
+	T& operator()(int m,int n) {return data[m][n];}
+
+};
+
+template<typename T, int row, int column>
+matrix<T,row,column>::matrix()
+{
+int i,j;
+	for(i=0;i<row;i++)
+	{
+		for(j=0;j<column;j++)
+		{
+		data[i][j]=0;
+		}
+	}
+}
+
+	template<typename T, int row, int column>
+	std::ostream& operator<<  (std::ostream& os, matrix<T,row,column> &myMatrix)
+	{	
+		int i,j;
+		for(i=0;i<row;i++)
+		{	
+			for(j=0;j<column;j++)
+			{
+			std::cout<<'\t';
+			os<<myMatrix(i,j);
+			}
+			std::cout<<'\n';
+		}
+	
+	return os;
+	}
+
+	template<typename T, int row, int column>
+	std::istream& operator>>  (std::istream& is, matrix<T,row,column> &myMatrix)
+	{	
+		int i,j;
+		for(i=0;i<row;i++)
+		{	
+			
+			for(j=0;j<column;j++)
+			{	
+			is>>myMatrix(i,j);
+			}
+		std::cout<<'\n';	
+		}
+	return is;
+	}
+
+	
+	template<typename T, int row, int column>
+	matrix<T,row,column> operator+  ( matrix<T,row,column> &a, matrix<T,row,column> &b)
+	{
+	int i,j;
+	matrix<T,row,column> answer;
+		for(i=0;i<row;i++)
+		{	
+			for(j=0;j<column;j++)
+			{
+			answer(i,j)=a(i,j)+b(i,j);
+			}	
+		
+		}
+	return answer;
+	}
+
+	
+	template<typename T, int row, int column>
+	matrix<T,row,column> operator-  ( matrix<T,row,column> &a, matrix<T,row,column> &b)
+	{
+	int i,j;
+	matrix<T,row,column> answer;
+		for(i=0;i<row;i++)
+		{	
+			for(j=0;j<column;j++)
+			{
+			answer(i,j)=a(i,j)-b(i,j);
+			}	
+		
+		}
+	return answer;
+	}
+
+
+	
+	template<typename T, int row1, int column1, int row2, int column2>
+	matrix<T,row1,column2> operator*  ( matrix<T,row1,column1> &a, matrix<T,row2,column2> &b)
+	{
+	int i,j,k,c1,c2,r1,r2;
+	matrix<T,row1,column2> answer;
+
+		if(column1!=row2)
+        	{std::cout<<"Matrix multiplication invalid. number of columns of A must be equal to number of rows of B"<<std::endl;}
+	
+		else
+		{
+			for(i=0;i<row1;i++)
+			{
+				for(k=0;k<column2;k++)
+				{
+					answer(i,k)=0;
+					for(j=0;j<column1;j++)
+					{
+					answer(i,k)=answer(i,k)+a(i,j)*b(j,k);
+					}
+				}
+			
+			}
+		}
+	return answer;
+	}
+
+//MATRIX-VECTOR MULTIPLICATION
+
+	template<typename T, int row1, int column1, int row2>
+	vect<T,row2> operator*  ( matrix<T,row1,column1> &a, vect<T,row2> &b)
+	{
+	int i,j,k,c1,c2,r1,r2;
+	vect<T,row2> answer;
+
+		if(column1!=row2)
+        	{std::cout<<"Matrix-vector multiplication invalid. number of columns of A must be equal to number of rows of B"<<std::endl;}
+	
+		else
+		{
+			for(i=0;i<row1;i++)
+			{
+				
+					answer[i]=0;
+					for(j=0;j<column1;j++)
+					{
+					answer[i]=answer[i]+a(i,j)*b[j];
+					}
+				
+			
+			}
+		}
+	return answer;
+	}
+
+
+//SYMMETRIC MATRIX FLAG
+	template<typename T, int row, int column>
+	bool symFlag  ( matrix<T,row,column> &a)
+	{
+		bool flag=1;	
+		int i,j;
+		for(i=0;i<row;i++)
+		{	
+			for(j=0;j<column;j++)
+			{
+				if(a(i,j)==a(j,i))
+				{
+				flag=flag*1;
+				}	
+				else
+				{
+				flag=flag*0;
+				}
+			}
+		}
+	return flag;
+	}
+
+	
+//TRANSPOSE OF A MATRIX
+	template<typename T, int row, int column>
+	matrix<T,row,column> Transpose (matrix<T,row,column> &a)
+	{
+	int i,j;
+	matrix<T,row,column> answer;
+		for(i=0;i<row;i++)
+		{	
+			for(j=0;j<column;j++)
+			{
+			answer(i,j)=a(j,i);
+			}	
+		
+		}
+	return answer;
+	}
+#endif
